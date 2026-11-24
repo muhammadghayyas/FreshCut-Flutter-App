@@ -6,48 +6,54 @@ class BarberDetailScreen extends StatelessWidget {
   final String name;
   final String experience;
   final String image;
+  final String rating;
 
   const BarberDetailScreen({
     super.key,
     required this.name,
     required this.experience,
     required this.image,
+    required this.rating,
   });
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+
       appBar: AppBar(
         title: Text('Barber Details'),
-        backgroundColor: Colors.green,
-        foregroundColor: Colors.white,
       ),
 
       body: ListView(
         padding: EdgeInsets.all(20),
+
         children: [
 
+          ClipRRect(
+            borderRadius: BorderRadius.circular(15),
 
-          Image.asset(
-            image,
-            height: 220,
-            width: 100,
-            fit: BoxFit.contain,
+            child: Image.asset(
+              image,
+              height: 220,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
           ),
-
 
           SizedBox(height: 20),
 
           Text(
             name,
             textAlign: TextAlign.center,
+
             style: TextStyle(
-              fontSize: 25,
+              fontSize: 28,
               fontWeight: FontWeight.bold,
             ),
           ),
 
-          SizedBox(height: 10),
+          SizedBox(height: 5),
 
           Text(
             experience,
@@ -56,23 +62,49 @@ class BarberDetailScreen extends StatelessWidget {
 
           SizedBox(height: 10),
 
-          Text(
-            'Professional Barber',
-            textAlign: TextAlign.center,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+
+            children: [
+
+              Icon(Icons.star, color: Colors.amber),
+
+              SizedBox(width: 5),
+
+              Text('$rating Rating'),
+
+            ],
           ),
 
-          SizedBox(height: 30),
+          SizedBox(height: 25),
 
           Text(
-            'Available Services',
-            textAlign: TextAlign.center,
+            'About',
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
             ),
           ),
 
-          SizedBox(height: 15),
+          SizedBox(height: 10),
+
+          Text(
+            '$name is a professional barber specializing '
+                'in modern haircuts and beard styling.',
+            style: TextStyle(fontSize: 16),
+          ),
+
+          SizedBox(height: 25),
+
+          Text(
+            'Available Services',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          SizedBox(height: 10),
 
           Card(
             child: ListTile(
@@ -92,10 +124,21 @@ class BarberDetailScreen extends StatelessWidget {
             ),
           ),
 
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.water_drop),
+              title: Text('Hair Wash'),
+              subtitle: Text('15 Minutes'),
+              trailing: Text('Rs. 150'),
+            ),
+          ),
+
           SizedBox(height: 25),
 
           ElevatedButton(
+
             onPressed: () {
+
               Navigator.push(
                 context,
                 MaterialPageRoute(

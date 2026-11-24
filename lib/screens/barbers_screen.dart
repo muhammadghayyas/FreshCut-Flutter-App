@@ -1,72 +1,173 @@
 import 'package:flutter/material.dart';
 import 'barber_detail_screen.dart';
 
-class BarbersScreen extends StatelessWidget {
+class BarbersScreen extends StatefulWidget {
   const BarbersScreen({super.key});
+
+  @override
+  State<BarbersScreen> createState() => _BarbersScreenState();
+}
+
+class _BarbersScreenState extends State<BarbersScreen> {
+
+  String search = '';
+
+  List<Map<String, String>> barbers = [
+
+    {
+      'name': 'Khalil',
+      'experience': '5 Years Experience',
+      'image': 'assets/images/barber1.jpg',
+      'rating': '4.9',
+    },
+
+    {
+      'name': 'Ahmed',
+      'experience': '3 Years Experience',
+      'image': 'assets/images/barber2.jpg',
+      'rating': '4.7',
+    },
+
+    {
+      'name': 'Sunain',
+      'experience': '4 Years Experience',
+      'image': 'assets/images/barber3.jpg',
+      'rating': '4.8',
+    },
+
+  ];
 
   @override
   Widget build(BuildContext context) {
 
-    final names = [
-      'Khalil',
-      'Ahmed',
-      'Sunain',
-    ];
+    List<Map<String, String>> filteredBarbers = [];
 
-    final experience = [
-      '5 Years Experience',
-      '3 Years Experience',
-      '4 Years Experience',
-    ];
+    for (var barber in barbers) {
 
-    final images = [
-      'assets/images/barber1.jpg',
-      'assets/images/barber2.jpg',
-      'assets/images/barber3.jpg',
-    ];
+      if (barber['name']!
+          .toLowerCase()
+          .contains(search.toLowerCase())) {
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Our Barbers'),
-        backgroundColor: Colors.green,
-        foregroundColor: Colors.white,
-      ),
+        filteredBarbers.add(barber);
+      }
+    }
 
-      body: ListView.builder(
-        itemCount: names.length,
+    return Column(
+      children: [
 
-        itemBuilder: (context, index) {
-          return Card(
-            margin: EdgeInsets.all(10),
+        Padding(
+          padding: EdgeInsets.all(15),
 
-            child: ListTile(
-              leading: CircleAvatar(
-                radius: 28,
-                backgroundImage: AssetImage(images[index]),
-              ),
+          child: TextField(
 
-              title: Text(names[index]),
+            decoration: InputDecoration(
+              hintText: 'Search barber...',
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(),
+            ),
 
-              subtitle: Text(experience[index]),
+            onChanged: (value) {
+              setState(() {
+                search = value;
+              });
+            },
+          ),
+        ),
 
-              trailing: Icon(Icons.arrow_forward),
+        Expanded(
+          child: filteredBarbers.isEmpty
 
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BarberDetailScreen(
-                      name: names[index],
-                      experience: experience[index],
-                      image: images[index],
+              ? Center(
+            child: Text('No barber found'),
+          )
+
+              : ListView.builder(
+
+            itemCount: filteredBarbers.length,
+
+            itemBuilder: (context, index) {
+
+              var barber = filteredBarbers[index];
+
+              return Card(
+                margin: EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 7,
+                ),
+
+                child: ListTile(
+
+                  leading: CircleAvatar(
+                    radius: 28,
+                    backgroundImage: AssetImage(
+                      barber['image']!,
                     ),
                   ),
-                );
-              },
-            ),
-          );
-        },
-      ),
+
+                  title: Text(
+                    barber['name']!,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  subtitle: Column(
+                    crossAxisAlignment:
+                    CrossAxisAlignment.start,
+
+                    children: [
+
+                      Text(barber['experience']!),
+
+                      Row(
+                        children: [
+
+                          Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                            size: 18,
+                          ),
+
+                          SizedBox(width: 5),
+
+                          Text(barber['rating']!),
+
+                        ],
+                      ),
+
+                    ],
+                  ),
+
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                  ),
+
+                  onTap: () {
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            BarberDetailScreen(
+
+                              name: barber['name']!,
+                              experience:
+                              barber['experience']!,
+                              image: barber['image']!,
+                              rating: barber['rating']!,
+
+                            ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+        ),
+
+      ],
     );
   }
 }
